@@ -1,12 +1,19 @@
-const rows = rowsOf(tablix);
+import { dirname, join, resolve } from 'node:path';
 
-const dynamic = list.filter(hasGroup);
-    const only = dynamic.length === 1 ? dynamic[0]! : undefined;
-    const idle = !!only && !child(only, 'TablixMembers') && !!child(only, 'Group') && !child(child(only, 'Group')!, 'GroupExpressions')
-      && textOf(child(only, 'Visibility/Hidden')).trim().toLowerCase() === 'true';
-    list.forEach((m, i) => {
-      if (idle && level > 0 && i < firstDynamic && !child(m, 'TablixMembers') && !child(m, 'Group')
-        && descendants(rows[out.length] ?? el('x')).some((e) => e.name === 'Value' && /Fields!\w+\.Value/.test(textOf(e)) && !TOTALLED.test(textOf(e)))) return out.push({ member: m, kind: 'detail' });
+async function matchReports(pattern: string): Promise<{ file: string; folder: string }[]> {
+  const name = basename(pattern);
+  const dir = dirname(pattern);
+  const re = new RegExp(`^${name.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.')}$`, 'i');
+  const found: { file: string; folder: string }[] = [];
+  for (const entry of (await readdir(dir)).sort()) {
+    const path = join(dir, entry);
+    if (re.test(entry) && /\.(rpt|json)$/i.test(entry) && (await stat(path)).isFile()) found.push({ file: path, folder: '' });
+  }
+  return found;
+}
 
+rpt-json to-rdl  <input.rpt|input.json|folder|"name_*.rpt"> [output-dir] [--connection "<connection string>"]
 
- place(it, covered.length > 1 && widths[k]! < it.w && covered.every((j, m) => m === 0 || j === covered[m - 1]! + 1) && slots[covered[0]!] === undefined && !line.some((o) => o !== it && colOf(o) === covered[0]) ? covered[0]! : k);
+const expandAll = async (path: string) => (/[*?]/.test(basename(path)) ? matchReports(path) : (await stat(path)).isDirectory() ? findReports(path) : [{ file: path, folder: '' }]);
+
+if (inputs.length === 0) throw new Error(/[*?]/.test(basename(input)) ? `no .rpt files match ${input}` : `no .rpt files in ${input} or its subfolders`);
