@@ -1,1 +1,3 @@
-test
+const readsOf = (f: FormulaInfo) => (f.referencedFields.length ? f.referencedFields : [...f.text.matchAll(/\{\s*([^{}@?#\s][^{}]*)\}/g)].map((m) => m[1]!));
+      const namesValues = (f: FormulaInfo) => /["']/.test(f.text) && /^\s*(if|select)\b/i.test(f.text)
+        && readsOf(f).length > 0 && readsOf(f).every((r) => bare(r) === bare(field));
