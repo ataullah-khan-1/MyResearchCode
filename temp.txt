@@ -1,1 +1,10 @@
-test
+const byLevel = new Map(orders.map((g) => [g.level, g.field]));
+    const levels = Math.max(def.groups.length, ...orders.map((g) => g.level));
+    const groups = orders.length ? Array.from({ length: levels }, (_, i) => byLevel.get(i + 1) ?? def.groups[i]).filter((g): g is string => !!g) : def.groups;
+
+const namesValues = (f: FormulaInfo) => /["']/.test(f.text) && /^\s*(if|select)\b/i.test(f.text)
+        && f.referencedFields.length > 0 && f.referencedFields.every((r) => bare(r) === bare(field));
+      const own = def.formulas.filter((f) => f.kind === 'internal' && f.name.toLowerCase() === `group #${level} name` && namesValues(f) && /\bthen\s*["']/i.test(f.text));
+      const named = def.formulas.filter((f) => f.kind === 'formula' && namesValues(f)
+        && !shownRefs.includes(`@${f.name.toLowerCase()}`) && !conditionNames.includes(f.name.toLowerCase()) && !otherTexts.includes(`{@${f.name.toLowerCase()}}`));
+      const attached = def.formulas.filter((f) => f.kind === 'conditionalFormat' && namesValues(f) && /\bthen\s*["']/i.test(f.text)
