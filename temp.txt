@@ -1,16 +1,20 @@
-const shown = descendants(all[l.i]!).filter((e) => e.name === 'Textbox' && !isBlank(e));
-          const said = shown.find((e) => /CountRows\(\)\s*(>|&gt;)\s*0/.test(textOf(child(e, 'Visibility/Hidden'))))
-            ?? (shown.length === 1 && fixedText(shown[0]!) !== undefined && /CountRows\(\)\s*(>|&gt;)\s*0[\s\S]*CountRows\(\)\s*(>|&gt;)\s*0/.test(textOf(child(l.member, 'Visibility/Hidden'))) ? shown[0] : undefined);
-
-const counts = (name: string | undefined) => {
-
-      const formula = name ? this.definition.formulas.find((f) => f.name.toLowerCase() === name.toLowerCase()) : undefined;
-      return !!formula && /^\s*(Distinct)?Count\s*\(\s*\{[^{}]+\}\s*\)\s*(>|<>)\s*0\s*$/i.test(formula.text);
-    };
-    return sections.some((section) => !section.suppressed && section.objects.some((o) => (o.kind === 'text' || o.kind === 'field') && !o.suppressed
-      && (counts(o.conditions?.suppress?.name) || (messageSections.has(section) && counts(section.conditions?.suppress?.name)))));
-
-
 const across = Number(textOf(child(child(cell, 'CellContents')!, 'ColSpan')) || 1) === cells.length && cells.length > 1;
-      const align = textOf(descendants(content).find((e) => e.name === 'TextAlign'));
-      if (index === 'first' && across && (!align || /^(left|general)$/i.test(align)) && (points(textOf(child(own, side))) ?? 2) <= 4) continue;
+      for (const c of childElements(child(content, 'ReportItems') ?? el('ReportItems'))) {
+        const align = textOf(descendants(c).find((e) => e.name === 'TextAlign'));
+        if (across && c.name === 'Textbox' && (!align || /^(left|general)$/i.test(align)) && (lengthInPoints(textOf(child(c, 'Left'))) ?? 0) <= 4) continue;
+
+
+const labelBoxes = new Set<XmlElement>();
+const labelPads = new Map<XmlElement, string>();
+
+?? (shown.length === 1 && (fixedText(shown[0]!) !== undefined || /^=[\s\S]*"[^"]{3,}"/.test(valueOf(shown[0]!))) && /CountRows\(\)\s*(>|&gt;)\s*0[\s\S]*CountRows\(\)\s*(>|&gt;)\s*0/.test(textOf(child(l.member, 'Visibility/Hidden'))) ? shown[0] : undefined);
+
+if (label) labelBoxes.add(tb);
+
+labelBoxes.add(label);
+
+for (const tb of labelBoxes) labelPads.set(tb, textOf(child(ownStyle(tb), 'PaddingLeft')));
+
+for (const [tb, padding] of labelPads) if (padding) setChild(ownStyle(tb), 'PaddingLeft', padding);
+  labelPads.clear();
+  labelBoxes.clear();
