@@ -1,18 +1,16 @@
-const sideAs = (name: string, from: XmlElement, least = 0) => el(name, ...['Color', 'Style', 'Width'].map((k) => child(from, k)).filter((x): x is XmlElement => !!x)
-    .map((x) => el(x.name, x.name === 'Width' && least > (inches(textOf(x)) ?? 0) * 72 ? `${least.toFixed(2)}pt` : textOf(x))));
-  const ruleAt = new Map<number, number>();
-  for (const row of rowsOf(tablix)) {
-    let c = 0;
-    for (const cell of cellsOf(row)) {
-      const contents = child(cell, 'CellContents');
-      if (!contents) continue;
-      const span = Number(textOf(child(contents, 'ColSpan')) || 1);
-      const it = cellItem(cell);
-      const b = span === 1 && it ? drawnSide(ownStyle(it), 'LeftBorder') : undefined;
-      const w = b ? (inches(textOf(child(b, 'Width'))) ?? 0) * 72 : 0;
-      if (w > (ruleAt.get(c) ?? 0)) ruleAt.set(c, w);
-      c += span;
-    }
-  }
+const shown = descendants(all[l.i]!).filter((e) => e.name === 'Textbox' && !isBlank(e));
+          const said = shown.find((e) => /CountRows\(\)\s*(>|&gt;)\s*0/.test(textOf(child(e, 'Visibility/Hidden'))))
+            ?? (shown.length === 1 && fixedText(shown[0]!) !== undefined && /CountRows\(\)\s*(>|&gt;)\s*0[\s\S]*CountRows\(\)\s*(>|&gt;)\s*0/.test(textOf(child(l.member, 'Visibility/Hidden'))) ? shown[0] : undefined);
 
-if (left) st.children.push(sideAs('LeftBorder', left, j === first ? 0 : ruleAt.get(j) ?? 0));
+const counts = (name: string | undefined) => {
+
+      const formula = name ? this.definition.formulas.find((f) => f.name.toLowerCase() === name.toLowerCase()) : undefined;
+      return !!formula && /^\s*(Distinct)?Count\s*\(\s*\{[^{}]+\}\s*\)\s*(>|<>)\s*0\s*$/i.test(formula.text);
+    };
+    return sections.some((section) => !section.suppressed && section.objects.some((o) => (o.kind === 'text' || o.kind === 'field') && !o.suppressed
+      && (counts(o.conditions?.suppress?.name) || (messageSections.has(section) && counts(section.conditions?.suppress?.name)))));
+
+
+const across = Number(textOf(child(child(cell, 'CellContents')!, 'ColSpan')) || 1) === cells.length && cells.length > 1;
+      const align = textOf(descendants(content).find((e) => e.name === 'TextAlign'));
+      if (index === 'first' && across && (!align || /^(left|general)$/i.test(align)) && (points(textOf(child(own, side))) ?? 2) <= 4) continue;
