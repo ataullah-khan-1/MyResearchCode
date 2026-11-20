@@ -1,16 +1,1 @@
-/** The column as a whole number (a BIT column comes back as Boolean: true = 1, false = 0); {@code null} when absent. */
-    public Integer integer(final Object[] row, final int index) {
-        return value(row, index)
-                .map(ProcedureRowReader::toInteger)
-                .orElse(null);
-    }
-
-    private static Integer toInteger(final Object value) {
-        if (value instanceof Number number) {
-            return number.intValue();
-        }
-        if (value instanceof Boolean flag) {
-            return flag ? 1 : 0;
-        }
-        return Integer.valueOf(value.toString().trim());
-    }
+test
